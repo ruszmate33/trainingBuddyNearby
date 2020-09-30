@@ -1,0 +1,25 @@
+{% extends "trainings/layout.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<form action="{% url 'trainings:index' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit location</button>
+</form> 
+
+<h2>
+    My location: {{ myLocation }}
+    lattitude, longitude: {{ myLat}}, {{ myLng }}
+</h2>
+<br>
+{{ map|safe }}
+
+{% for training in distanceSet %}
+{{ training.name }} in {{ training.adress }}: {{ training.distance }}
+<br>
+{% endfor %}
+
+
+{% endblock content %}
