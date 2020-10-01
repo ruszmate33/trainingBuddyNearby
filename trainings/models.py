@@ -9,6 +9,7 @@ class Training(models.Model):
     adress = models.CharField(max_length=64, default="Gotham")
     location = models.PointField(geography=True, default = Point(0, 0))
     time = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
+    description = models.CharField(max_length=100, default="some description")
 
     def getLng(self):
         return self.location.x
