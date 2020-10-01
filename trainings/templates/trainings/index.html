@@ -6,7 +6,8 @@
 <form action="{% url 'trainings:index' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Submit location</button>
+    {{ exampleForm.as_p }}
+    <button type="submit">Submit training</button>
 </form> 
 
 <h2>

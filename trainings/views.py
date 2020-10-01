@@ -20,6 +20,7 @@ def index(request):
             lat, lng = getLatLngFromApi(myLocation)
             instance.location = Point(lng, lat) # Point takes this way
             instance.save()
+            form = TrainingForm()
     else:
         form = TrainingForm()
         user_location = geocoder.osm("Wien")
@@ -52,5 +53,5 @@ def index(request):
         "myLng": round(lng, 2),
         "form": form,
         "map": mapFolium,
-        "distanceSet":distanceSet
+        "distanceSet": distanceSet,
     })
