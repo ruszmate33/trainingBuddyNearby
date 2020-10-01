@@ -9,9 +9,6 @@ from django.contrib.gis.db.models.functions import Distance
 
 # Create your views here.
 
-user_location = Point(15.6038, 48.4100, srid=4326)
-
-
 def index(request):
     if request.method == 'POST':
         form = TrainingForm(request.POST)
@@ -26,34 +23,31 @@ def index(request):
             instance.save()
     else:
         form = TrainingForm()
-        myLocation = geocoder.osm("Wien")
+        user_location = geocoder.osm("Wien")
 
     # marker
-    lat, lng = getLatLngFromApi(myLocation)
-    name = getSettlementFromApi(myLocation)
+    lat, lng = getLatLngFromApi(user_location)
+    nameSettlement = getSettlementFromApi(user_location)
+    user_location_point = Point(lng, lat, srid=4326)
 
     # initialize folium map
     mapFolium = folium.Map(width=800, height=500, location=(lat, lng))
-    addMarker(lat, lng, name, mapFolium)
+    addMarker(lat, lng, "my location", mapFolium)
 
     trainings = Training.objects.all()
 
-    # add marker to locations
-    # a nice .map(function) would help here
-    for training in trainings:
-        lat = training.getLat()
-        lng = training.getLng()
-        name = training.getSport()
-        addMarker(lat, lng, name, mapFolium)
+    #add marker to locations
+    [training.putOnMap(mapFolium) for training in trainings]
+    
 
     mapFolium = mapFolium._repr_html_()
 
     # order by distance to user
-    distanceSet = Training.objects.annotate(distance=Distance('location', user_location)).order_by('distance')
+    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('adress','sport','distance').distinct()
     print(distanceSet)
 
     return render(request, "trainings/index.html", {
-        "myLocation": myLocation,
+        "myLocation": nameSettlement,
         "myLat": round(lat, 2),
         "myLng": round(lng, 2),
         "form": form,

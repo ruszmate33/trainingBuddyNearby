@@ -1,6 +1,7 @@
 # Create your models here.
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+from .utils import addMarker
 
 class Training(models.Model):
     sport = models.CharField(max_length=100)
@@ -15,3 +16,6 @@ class Training(models.Model):
 
     def getSport(self):
         return self.sport
+
+    def putOnMap(self, mapFolium):
+        addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium)

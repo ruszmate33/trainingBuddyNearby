@@ -10,16 +10,24 @@
 </form> 
 
 <h2>
-    My location: {{ myLocation }}
-    lattitude, longitude: {{ myLat}}, {{ myLng }}
+    My location: {{ myLocation }} ({{ myLat}}, {{ myLng }})
 </h2>
 <br>
 {{ map|safe }}
 
-{% for training in distanceSet %}
-{{ training.name }} in {{ training.adress }}: {{ training.distance }}
-<br>
-{% endfor %}
-
+<table class=table>
+    <tr>
+        <th>Sport</th>
+        <th>Location</th>
+        <th>Distance</th>
+    </tr>
+    {% for training in distanceSet %}
+    <tr>
+        <td>{{ training.sport }}</td>
+        <td>{{ training.adress }}</td>
+        <td>{{ training.distance.km|floatformat }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock content %}
