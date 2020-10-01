@@ -8,7 +8,6 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 
 # Create your views here.
-
 def index(request):
     if request.method == 'POST':
         form = TrainingForm(request.POST)
@@ -26,6 +25,7 @@ def index(request):
         user_location = geocoder.osm("Wien")
 
     # marker
+    user_location = geocoder.osm("Wien")
     lat, lng = getLatLngFromApi(user_location)
     nameSettlement = getSettlementFromApi(user_location)
     user_location_point = Point(lng, lat, srid=4326)
@@ -43,7 +43,7 @@ def index(request):
     mapFolium = mapFolium._repr_html_()
 
     # order by distance to user
-    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('adress','sport','distance').distinct()
+    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('adress','sport','time','distance').distinct()
     print(distanceSet)
 
     return render(request, "trainings/index.html", {

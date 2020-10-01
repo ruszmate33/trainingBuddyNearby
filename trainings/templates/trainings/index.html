@@ -19,12 +19,14 @@
     <tr>
         <th>Sport</th>
         <th>Location</th>
+        <th>Time</th>
         <th>Distance</th>
     </tr>
     {% for training in distanceSet %}
     <tr>
         <td>{{ training.sport }}</td>
         <td>{{ training.adress }}</td>
+        <td>{{ training.time }}</td>
         <td>{{ training.distance.km|floatformat }}</td>
     </tr>
     {% endfor %}

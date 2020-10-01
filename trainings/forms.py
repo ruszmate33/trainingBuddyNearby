@@ -5,4 +5,4 @@ from .models import Training
 class TrainingForm(forms.ModelForm):
      class Meta:
           model = Training     
-          fields = ('sport', 'adress',)
+          fields = ('sport', 'adress', 'time')
