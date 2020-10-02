@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates/')
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +31,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'crispy_forms',
     'trainings',
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'trainingBuddyNearby.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,10 +122,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATIC_DIR = os.path.join(BASE_DIR), 'static'
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [STATIC_DIR]
 
 # help from https://stackoverflow.com/questions/49139044/geodjango-on-windows-could-not-find-the-gdal-library-oserror-winerror-12
-import os
 if os.name == 'nt':
     import platform
     OSGEO4W = r"C:\OSGeo4W"

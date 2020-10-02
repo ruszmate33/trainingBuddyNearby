@@ -8,7 +8,9 @@ class Training(models.Model):
     sport = models.CharField(max_length=100)
     adress = models.CharField(max_length=64, default="Gotham")
     location = models.PointField(geography=True, default = Point(0, 0))
+    date = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     time = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
+    dateTime = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     description = models.CharField(max_length=100, default="some description")
 
     def getLng(self):

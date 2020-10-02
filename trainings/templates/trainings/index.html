@@ -5,6 +5,7 @@
 
 <form action="{% url 'trainings:index' %}" method="post">
     {% csrf_token %}
+    {{ form.media }}
     {{ form.as_p }}
     {{ exampleForm.as_p }}
     <button type="submit">Submit training</button>

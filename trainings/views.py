@@ -7,6 +7,8 @@ from .utils import addMarker, getLatLngFromApi, getSettlementFromApi
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 
+from django.views.i18n import JavaScriptCatalog
+
 # Create your views here.
 def index(request):
     if request.method == 'POST':
