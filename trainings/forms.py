@@ -9,13 +9,22 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 class TrainingForm(forms.ModelForm):
-    time = forms.DateField(widget=DateInput)
+    #time = forms.DateField(widget=DateInput)
     sport = forms.CharField(label='',
                             widget=forms.TextInput(attrs={"placeholder":"your sport"}))
     adress = forms.CharField(label='',
                             widget=forms.TextInput(attrs={"placeholder":"City/Town, Street"}))
+    date = forms.DateTimeField(
+        input_formats=['%d/%m/%Y %H:%M'],
+        widget = forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input',
+            'data-target': '#datetimepicker1'
+        })
+    )
+
     class Meta:
           model = Training     
           fields = ['sport', 
                     'adress', 
-                    'time']
+                    'date',
+                    'description']
