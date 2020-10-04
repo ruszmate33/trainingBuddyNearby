@@ -44,7 +44,7 @@ def index(request):
     mapFolium = mapFolium._repr_html_()
 
     # order by distance to user
-    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('adress','sport','time','distance').distinct()
+    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('adress','sport','date','distance').distinct()
     print(distanceSet)
 
     return render(request, "trainings/index.html", {
