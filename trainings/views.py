@@ -1,14 +1,17 @@
+from django.contrib.gis.geos import Point
+from django.contrib.gis.db.models.functions import Distance
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-import geocoder
+from django.urls import reverse
 import folium
+import geocoder
 from .forms import TrainingForm
 from .models import Training
 from .utils import addMarker, getLatLngFromApi, getSettlementFromApi
-from django.contrib.gis.geos import Point
-from django.contrib.gis.db.models.functions import Distance
 
 # Create your views here.
-def index(request):
+
+def add(request):
     if request.method == 'POST':
         form = TrainingForm(request.POST)
         if form.is_valid():
@@ -16,16 +19,24 @@ def index(request):
             myLocation = form.cleaned_data["adress"]
             sport = form.cleaned_data["sport"]
             instance.sport = sport
+            # here try-catch block, landing page for errors
             instance.adress = getSettlementFromApi(myLocation)
             lat, lng = getLatLngFromApi(myLocation)
             instance.location = Point(lng, lat) # Point takes this way
             instance.save()
             form = TrainingForm()
+            return HttpResponseRedirect(reverse("trainings:index"))
     else:
         form = TrainingForm()
-        user_location = geocoder.osm("Wien")
+        # user_location = geocoder.osm("Wien")
 
-    # marker
+    return render(request, "trainings/add.html", {
+        "form": form,
+    })
+
+
+def index(request):
+    # marker for user location
     user_location = geocoder.osm("Wien")
     lat, lng = getLatLngFromApi(user_location)
     nameSettlement = getSettlementFromApi(user_location)
@@ -39,7 +50,6 @@ def index(request):
 
     #add marker to locations
     [training.putOnMap(mapFolium) for training in trainings]
-    
 
     mapFolium = mapFolium._repr_html_()
 
@@ -50,8 +60,7 @@ def index(request):
     return render(request, "trainings/index.html", {
         "myLocation": nameSettlement,
         "myLat": round(lat, 2),
-        "myLng": round(lng, 2),
-        "form": form,
+        "myLng": round(lng, 2),   
         "map": mapFolium,
         "distanceSet": distanceSet,
     })
