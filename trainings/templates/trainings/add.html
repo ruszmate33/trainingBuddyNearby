@@ -1,0 +1,22 @@
+{% extends "trainings/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    add new!
+{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'trainings:index' %}">See trainingsessions</a>
+
+    <h2>
+        Add your trainingsession, let people join it!
+    </h2>
+    <br>
+
+    <form action="{% url 'trainings:add' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit training</button>
+    </form> 
+
+{% endblock content %}
