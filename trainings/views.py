@@ -14,33 +14,58 @@ from .utils import addMarker, getLatLngFromApi, getSettlementFromApi
 def add(request):
     if request.method == 'POST':
         form = TrainingForm(request.POST)
+        
         if form.is_valid():
             instance = form.save(commit=False)
             myLocation = form.cleaned_data["adress"]
             sport = form.cleaned_data["sport"]
             instance.sport = sport
-            # here try-catch block, landing page for errors
-            instance.adress = getSettlementFromApi(myLocation)
-            lat, lng = getLatLngFromApi(myLocation)
-            instance.location = Point(lng, lat) # Point takes this way
-            instance.save()
-            form = TrainingForm()
+            # here try-catch block, error massage for errors
+            try:
+                instance.adress = getSettlementFromApi(myLocation)
+                lat, lng = getLatLngFromApi(myLocation)
+                instance.location = Point(lng, lat) # Point takes this way
+                instance.save()
+                
+            except:
+                print(f"Sorry, we could not find location {myLocation}.")
+                errormessage = f"Sorry, we could not find location {myLocation}."
+                return render(request, "trainings/add.html", {
+                        "form": form,
+                        "errormessage": errormessage,
+                })
+                        
             return HttpResponseRedirect(reverse("trainings:index"))
     else:
         form = TrainingForm()
+        errormassage = None
         # user_location = geocoder.osm("Wien")
 
-    return render(request, "trainings/add.html", {
+    context = {
         "form": form,
-    })
+        "errormessage": errormassage
+    }
+
+    return render(request, "trainings/add.html", context)
 
 
 def index(request):
     # marker for user location
-    user_location = geocoder.osm("Wien")
-    lat, lng = getLatLngFromApi(user_location)
-    nameSettlement = getSettlementFromApi(user_location)
-    user_location_point = Point(lng, lat, srid=4326)
+    try:
+        user_location = geocoder.osm("Wien")
+    except:
+        print(f"geocoder open street map can not process location {user_location}")
+    try:
+        lat, lng = getLatLngFromApi(user_location)
+    except:
+        print(f"lat, lng gets: {getLatLngFromApi(user_location)}")
+        # hard code 0, 0 as emergency
+        lat, lng = 0, 0
+    try:
+        nameSettlement = getSettlementFromApi(user_location)
+        user_location_point = Point(lng, lat, srid=4326)
+    except:
+        user_location_point = Point(0, 0, srid=4326)
 
     # initialize folium map
     mapFolium = folium.Map(width=800, height=500, location=(lat, lng))

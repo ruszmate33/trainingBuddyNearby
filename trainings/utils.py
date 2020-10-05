@@ -11,13 +11,15 @@ def addMarker(lat, lng, name, mapFolium):
 
 
 def getLatLngFromApi(locationString):
-    location = geocoder.osm(locationString)
-
-    if location.ok == True:
-        [lat, lng] = location.latlng
-        return lat, lng
-    else:
-        return f"Could not retrieve location: {locationString}."
+    try:
+        location = geocoder.osm(locationString)
+        if location.ok == True:
+            [lat, lng] = location.latlng
+            return lat, lng
+    except:
+        print(f"Could not retrieve location {locationString}' lat, lng'.")
+        print(f"getLatLngFromApi() returns: {location.latlng}")
+        raise
 
 
 def getSettlementFromApi(locationString):

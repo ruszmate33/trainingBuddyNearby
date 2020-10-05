@@ -13,6 +13,12 @@
     </h2>
     <br>
 
+    {% if errormessage %}
+    <h2>
+        {{ errormessage }}
+    </h2>
+    {% endif %}
+
     <form action="{% url 'trainings:add' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
