@@ -20,30 +20,4 @@ class TrainingForm(forms.ModelForm):
             'adress': forms.TextInput(attrs={"placeholder":"City/Town, Street"}),
             'description': forms.TextInput(attrs={"placeholder":"City/Town, Street"}),
             'date': forms.DateTimeInput(attrs={'type':'datetime-local'})
-            # 'date': forms.DateTimeInput(attrs={
-            #         'input_formats': ["%Y-%m-%d %H:%M"],
-            #         'class': 'form-control datetimepicker-input',
-            #         'data-target': '#datetimepicker1'})
         }
-
-# class TrainingForm(forms.ModelForm):
-#     sport = forms.CharField(label='',
-#                             widget=forms.TextInput(attrs={"placeholder":"your sport"}))
-#     adress = forms.CharField(label='',
-#                             widget=forms.TextInput(attrs={"placeholder":"City/Town, Street"}))
-#     description = forms.CharField(label='',
-#                             widget=forms.TextInput(attrs={"placeholder":"some description"}))
-#     date = forms.DateTimeField(
-#         input_formats=['%d/%m/%Y %H:%M'],
-#         widget = forms.DateTimeInput(attrs={
-#             'class': 'form-control datetimepicker-input',
-#             'data-target': '#datetimepicker1'
-#         })
-#     )
-
-#     class Meta:
-#           model = Training     
-#           fields = ['sport', 
-#                     'adress', 
-#                     'date',
-#                     'description']

@@ -1,0 +1,29 @@
+{% extends "trainings/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Session    
+{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'trainings:index' %}">See trainingsessions</a>
+    <br>
+    <h2>
+        {{ sport }} at {{ adress }}
+    </h2>
+    <div>
+        <ul>
+            <li>
+                Starting time: {{ date }}
+            </li>
+            <li>
+                Description: {{ description }}
+            </li>
+        </ul>
+    </div>
+    
+
+
+    
+    
+{% endblock content %}

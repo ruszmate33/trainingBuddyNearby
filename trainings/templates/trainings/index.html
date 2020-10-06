@@ -23,7 +23,11 @@
         </tr>
         {% for training in distanceSet %}
         <tr>
-            <td>{{ training.sport }}</td>
+            <td>
+                <a href="{% url 'trainings:training' training.id %}">
+                    {{ training.sport }}
+                </a>
+            </td>
             <td>{{ training.adress }}</td>
             <td>{{ training.date }}</td>
             <td>{{ training.distance.km|floatformat }}</td>

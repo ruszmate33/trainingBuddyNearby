@@ -7,4 +7,5 @@ app_name = "trainings"
 urlpatterns = [
     path("", views.index, name="index"),
     path("add", views.add, name="add"),
+    path("<int:training_id>", views.training, name="training"),
 ]

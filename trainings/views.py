@@ -11,6 +11,22 @@ from .utils import addMarker, getLatLngFromApi, getSettlementFromApi
 
 # Create your views here.
 
+def training(request, training_id):
+    training = Training.objects.get(id=training_id)
+    sport = training.getSport()
+    description = training.getDescription()
+    adress = training.getAdress()
+    date = training.getDate()
+    context = {
+        "sport": sport,
+        "description": description,
+        "adress": adress,
+        "date": date,
+        }
+
+    return render(request, "trainings/training.html", context)
+
+
 def add(request):
     if request.method == 'POST':
         form = TrainingForm(request.POST)
@@ -79,7 +95,7 @@ def index(request):
     mapFolium = mapFolium._repr_html_()
 
     # order by distance to user
-    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('adress','sport','date','distance').distinct()
+    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id', 'adress','sport','date','distance').distinct()
     print(distanceSet)
 
     return render(request, "trainings/index.html", {

@@ -22,3 +22,12 @@ class Training(models.Model):
 
     def putOnMap(self, mapFolium):
         addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium)
+
+    def getDescription(self):
+        return self.description
+
+    def getAdress(self):
+        return self.adress
+
+    def getDate(self):
+        return self.date
