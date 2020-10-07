@@ -5,10 +5,15 @@ from geopy.distance import geodesic
 
 
 # filter out trainings in the past
-def filterPastDates(obj):
+def filterPastDates(obj, timePeriod):
     startdate = datetime.now()
     oneWeek = timedelta(days=7)
-    latest = startdate + 4*oneWeek
+    if timePeriod == "month":
+        latest = startdate + 4*oneWeek
+    elif timePeriod == "week":
+        latest = startdate + oneWeek
+    else:
+        latest = startdate + oneWeek
     print(f"start: {startdate}")
     print(f"end: {startdate}")
     return obj.filter(date__range=[startdate, latest])

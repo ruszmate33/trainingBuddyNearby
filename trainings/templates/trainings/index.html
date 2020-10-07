@@ -14,6 +14,12 @@
     <br>
     {{ map|safe }}
 
+
+    <form action="{% url 'trainings:index' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" name="timePeriod" value="week">This week</button>
+        <button type="submit" name="timePeriod" value="month">This month</button>
+    </form>
     <table class=table>
         <tr>
             <th>Sport</th>

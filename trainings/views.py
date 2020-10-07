@@ -65,8 +65,14 @@ def add(request):
     return render(request, "trainings/add.html", context)
 
 
-def index(request):
+def index(request, timePeriod="month"):
+    if request.method == "POST":
+        timePeriod = request.POST['timePeriod']
+        print(f"timePeriod: {timePeriod}")
+        
+    
     # marker for user location
+    print(f"timePeriod: {timePeriod}")
     try:
         user_location = geocoder.osm("Wien")
     except:
@@ -88,19 +94,13 @@ def index(request):
     addMarker(lat, lng, "my location", mapFolium, 0)
 
     # filter out trainings in the past
-    # startdate = datetime.now()
-    # print(startdate)
-    # trainings = Training.objects.all().filter(date__range=[startdate, "2021-10-07"])
-    trainings = filterPastDates(Training.objects.all())
-
+    trainings = filterPastDates(Training.objects.all(), timePeriod)
+    
     #add marker to locations
     [training.putOnMap(mapFolium) for training in trainings]
-
     mapFolium = mapFolium._repr_html_()
-
     
     # order by distance to user
-    #distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct().filter(date__range=["2020-10-07", "2021-10-07"])
     distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
     print(distanceSet)
 
