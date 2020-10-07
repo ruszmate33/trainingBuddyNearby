@@ -11,6 +11,9 @@ class Training(models.Model):
     date = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     description = models.CharField(max_length=100, default="some description")
 
+    def getID(self):
+        return self.id
+
     def getLng(self):
         return self.location.x
 
@@ -20,8 +23,12 @@ class Training(models.Model):
     def getSport(self):
         return self.sport
 
+    def getUrl(self):
+        #return "<a href=\"{% url 'trainings:training' "+str(self.getID())+"%}\">Sport</a>"
+        return '<a href=http://127.0.0.1:8000/trainings/'+str(self.getID())+' target="_blank">Join</a>'
+
     def putOnMap(self, mapFolium):
-        addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium)
+        addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium, self.getUrl(), self.getDate())
 
     def getDescription(self):
         return self.description

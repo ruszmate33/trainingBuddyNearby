@@ -3,11 +3,18 @@ import geocoder
 from geopy.distance import geodesic
 
 
-def addMarker(lat, lng, name, mapFolium):
+def addMarker(lat, lng, name, mapFolium, url, date=None):
+    if date is not None:
+        #html =  f"<h3>{name}</h3><h3>{date}</h3><h3>{url}</h3>"
+        html =  f"<h4>{name}</h4><p>{date}</p><p>{url}</p>"
+        html = folium.Html(html, script=True)
+        popup = folium.Popup(html)
+    else:
+        popup = folium.Popup(name)
     folium.Marker([lat, lng], 
-                    tooltip='click here for more',
+                    tooltip=name,
                     icon=folium.Icon(color='red'), 
-                    popup=name).add_to(mapFolium)
+                    popup=popup).add_to(mapFolium)
 
 
 def getLatLngFromApi(locationString):

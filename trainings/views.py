@@ -85,7 +85,7 @@ def index(request):
 
     # initialize folium map
     mapFolium = folium.Map(width=800, height=500, location=(lat, lng))
-    addMarker(lat, lng, "my location", mapFolium)
+    addMarker(lat, lng, "my location", mapFolium, 0)
 
     trainings = Training.objects.all()
 
