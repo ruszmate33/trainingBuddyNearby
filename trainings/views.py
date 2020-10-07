@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from django.http import HttpResponseRedirect

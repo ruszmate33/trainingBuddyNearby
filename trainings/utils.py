@@ -1,13 +1,16 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import folium 
 import geocoder
 from geopy.distance import geodesic
 
 
 # filter out trainings in the past
-def filterPastDates(obj, latest="2021-10-07"):
+def filterPastDates(obj):
     startdate = datetime.now()
-    print(startdate)
+    oneWeek = timedelta(days=7)
+    latest = startdate + 4*oneWeek
+    print(f"start: {startdate}")
+    print(f"end: {startdate}")
     return obj.filter(date__range=[startdate, latest])
 
 def addMarker(lat, lng, name, mapFolium, url, date=None):
