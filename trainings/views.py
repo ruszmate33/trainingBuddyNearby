@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from django.http import HttpResponseRedirect
@@ -7,7 +8,7 @@ import folium
 import geocoder
 from .forms import TrainingForm
 from .models import Training
-from .utils import addMarker, getLatLngFromApi, getSettlementFromApi
+from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates
 
 # Create your views here.
 
@@ -87,15 +88,21 @@ def index(request):
     mapFolium = folium.Map(width=800, height=500, location=(lat, lng))
     addMarker(lat, lng, "my location", mapFolium, 0)
 
-    trainings = Training.objects.all()
+    # filter out trainings in the past
+    # startdate = datetime.now()
+    # print(startdate)
+    # trainings = Training.objects.all().filter(date__range=[startdate, "2021-10-07"])
+    trainings = filterPastDates(Training.objects.all())
 
     #add marker to locations
     [training.putOnMap(mapFolium) for training in trainings]
 
     mapFolium = mapFolium._repr_html_()
 
+    
     # order by distance to user
-    distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id', 'adress','sport','date','distance').distinct()
+    #distanceSet = Training.objects.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct().filter(date__range=["2020-10-07", "2021-10-07"])
+    distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
     print(distanceSet)
 
     return render(request, "trainings/index.html", {

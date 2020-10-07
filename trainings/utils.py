@@ -1,11 +1,17 @@
+from datetime import datetime
 import folium 
 import geocoder
 from geopy.distance import geodesic
 
 
+# filter out trainings in the past
+def filterPastDates(obj, latest="2021-10-07"):
+    startdate = datetime.now()
+    print(startdate)
+    return obj.filter(date__range=[startdate, latest])
+
 def addMarker(lat, lng, name, mapFolium, url, date=None):
     if date is not None:
-        #html =  f"<h3>{name}</h3><h3>{date}</h3><h3>{url}</h3>"
         html =  f"<h4>{name}</h4><p>{date}</p><p>{url}</p>"
         html = folium.Html(html, script=True)
         popup = folium.Popup(html)
