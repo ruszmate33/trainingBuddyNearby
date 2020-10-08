@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from django.http import HttpResponseRedirect
@@ -9,8 +10,8 @@ from .forms import TrainingForm
 from .models import Training
 from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport
 
-# Create your views here.
 
+@login_required(login_url="users:login")
 def training(request, training_id):
     training = Training.objects.get(id=training_id)
     sport = training.getSport()
@@ -27,6 +28,7 @@ def training(request, training_id):
     return render(request, "trainings/training.html", context)
 
 
+@login_required(login_url="users:login")
 def add(request):
     if request.method == 'POST':
         form = TrainingForm(request.POST)
@@ -65,6 +67,7 @@ def add(request):
     return render(request, "trainings/add.html", context)
 
 
+@login_required(login_url="users:login")
 def index(request, timePeriod="month", sportFilter=None):
     if request.method == "POST":
         timePeriod = request.POST.get('timePeriod', None)

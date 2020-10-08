@@ -1,8 +1,11 @@
 # Create your models here.
+from datetime import datetime
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+from django.db.models.signals import post_save
 from .utils import addMarker
-from datetime import datetime
+
 
 class Training(models.Model):
     sport = models.CharField(max_length=100)
@@ -38,3 +41,21 @@ class Training(models.Model):
 
     def getDate(self):
         return self.date.strftime('%Y-%m-%d %H:%M')
+
+
+class Athlete(models.Model):
+    user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
+    trainings = models.ManyToManyField(Training, blank=True, related_name="participants")
+
+    def __str__(self):
+        full_name = self.user.first_name + " " + self.user.last_name
+        return f"{full_name}"
+
+
+# I saw this trick at https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
+def create_athlete(sender, **kwargs):
+    user = kwargs["instance"]
+    if kwargs["created"]:
+        athlete = Athlete(user=user)
+        athlete.save()
+post_save.connect(create_athlete, sender=User)
