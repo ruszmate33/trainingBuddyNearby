@@ -19,7 +19,24 @@
             <li>
                 Description: {{ description }}
             </li>
+            {% for participant in participants %}
+                <li>{{ participant }} {{ participant.last_name }}</li>
+                {% empty %}
+                <li>No participants yet.</li>
+            {% endfor %}
         </ul>
+    </div>
+    <div>
+        <form action="{% url 'trainings:join' training.id %}" method = post>
+            {% csrf_token %}
+            <input type="submit" value=Join>
+        </form>
+    </div>
+    <div>
+        <form action="{% url 'trainings:signout' training.id %}" method = post>
+            {% csrf_token %}
+            <input type="submit" value=Signout>
+        </form>
     </div>
     
 

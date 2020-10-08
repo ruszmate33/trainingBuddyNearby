@@ -7,8 +7,31 @@ from django.urls import reverse
 import folium
 import geocoder
 from .forms import TrainingForm
-from .models import Training
+from .models import Training, Athlete
 from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport
+
+@login_required(login_url="users:login")
+def join(request, training_id):
+    if request.method == "POST":
+        training = Training.objects.get(id=training_id)
+        # add current user as participant
+        athlete = Athlete.objects.get(user=request.user)
+        athlete.trainings.add(training)
+
+        # redirect to the training page
+        return HttpResponseRedirect(reverse("trainings:training", args=(training.id,)))
+
+
+@login_required(login_url="users:login")
+def signout(request, training_id):
+    if request.method == "POST":
+        training = Training.objects.get(id=training_id)
+        # add current user as participant
+        athlete = Athlete.objects.get(user=request.user)
+        athlete.trainings.remove(training)
+
+        # redirect to the training page
+        return HttpResponseRedirect(reverse("trainings:training", args=(training.id,)))
 
 
 @login_required(login_url="users:login")
@@ -18,11 +41,14 @@ def training(request, training_id):
     description = training.getDescription()
     adress = training.getAdress()
     date = training.getDate()
+    participants = training.participants.all()
     context = {
+        "training":training,
         "sport": sport,
         "description": description,
         "adress": adress,
         "date": date,
+        "participants":participants,
         }
 
     return render(request, "trainings/training.html", context)

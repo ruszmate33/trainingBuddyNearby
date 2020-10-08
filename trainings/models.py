@@ -14,6 +14,9 @@ class Training(models.Model):
     date = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     description = models.CharField(max_length=100, blank=False)
 
+    def getParticipants(self):
+        return self.participants.all()
+    
     def getID(self):
         return self.id
 
