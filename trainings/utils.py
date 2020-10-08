@@ -3,6 +3,11 @@ import folium
 import geocoder
 from geopy.distance import geodesic
 
+# filter for trainings
+def filterBySport(obj, sportFilter):
+    if sportFilter is None:
+        return obj
+    return obj.filter(sport__contains = sportFilter)
 
 # filter out trainings in the past
 def filterPastDates(obj, timePeriod):

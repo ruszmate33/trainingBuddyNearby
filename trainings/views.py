@@ -7,7 +7,7 @@ import folium
 import geocoder
 from .forms import TrainingForm
 from .models import Training
-from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates
+from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport
 
 # Create your views here.
 
@@ -67,9 +67,11 @@ def add(request):
 
 def index(request, timePeriod="month", sportFilter=None):
     if request.method == "POST":
-        timePeriod = request.POST['timePeriod']
+        timePeriod = request.POST.get('timePeriod', None)
         print(f"timePeriod: {timePeriod}")
-        
+        sportFilter = request.POST.get('sportFilter', None)
+        print(f"sportFilter: {sportFilter}")
+        print(f"whole postRequest: {request.POST}")
     
     # marker for user location
     print(f"timePeriod: {timePeriod}")
@@ -93,8 +95,10 @@ def index(request, timePeriod="month", sportFilter=None):
     mapFolium = folium.Map(width=800, height=500, location=(lat, lng))
     addMarker(lat, lng, "my location", mapFolium, 0)
 
-    # filter out trainings in the past
-    trainings = filterPastDates(Training.objects.all(), timePeriod)
+    # filter out trainings by time and sport
+    trainings = Training.objects.all()
+    trainings = filterPastDates(trainings, timePeriod)
+    trainings = filterBySport(trainings, sportFilter)
     
     #add marker to locations
     [training.putOnMap(mapFolium) for training in trainings]

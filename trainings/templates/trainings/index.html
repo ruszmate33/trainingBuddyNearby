@@ -17,13 +17,14 @@
 
     <form action="{% url 'trainings:index' %}" method="POST">
         {% csrf_token %}
-        <div>
             <button type="submit" name="timePeriod" value="week">This week</button>
             <button type="submit" name="timePeriod" value="month">This month</button>
-            <button type="submit" name="timePeriod" value="noLimit">All upcoming</button>
-        </div>
+            <button type="submit" name="timePeriod" value="noLimit">All upcoming</button>       
+    </form>
+    <form action="{% url 'trainings:index' %}" method="POST">
+        {% csrf_token %}
         <label for="sportFilter">Filter for sport:</label><br>
-        <input type="text" id="sportFilter" value="sport"><br><br>
+        <input type="text" id="sportFilter" name="sportFilter" value="sport"><br><br>
         <input type="submit" value="Submit">
     </form>
     <br>
