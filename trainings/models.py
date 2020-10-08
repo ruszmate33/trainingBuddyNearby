@@ -37,4 +37,4 @@ class Training(models.Model):
         return self.adress
 
     def getDate(self):
-        return self.date
+        return self.date.strftime('%Y-%m-%d %H:%M')
