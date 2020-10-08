@@ -18,6 +18,10 @@ class TrainingForm(forms.ModelForm):
         widgets = {
             'sport': forms.TextInput(attrs={"placeholder":"your sport"}),
             'adress': forms.TextInput(attrs={"placeholder":"City/Town, Street"}),
-            'description': forms.TextInput(attrs={"placeholder":"City/Town, Street"}),
+            'description': forms.Textarea(
+                                attrs={
+                                    "placeholder":"Tell others what to expect!",
+                                    "cols":90,
+                                    "rows":10}),
             'date': forms.DateTimeInput(attrs={'type':'datetime-local'})
         }

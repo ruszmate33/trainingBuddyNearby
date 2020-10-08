@@ -9,7 +9,7 @@
     <a href="{% url 'trainings:index' %}">See trainingsessions</a>
 
     <h2>
-        Add your trainingsession, let people join it!
+        Create new trainingsession, let people join it!
     </h2>
     <br>
 
@@ -22,7 +22,7 @@
     <form action="{% url 'trainings:add' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Submit training</button>
+        <button type="submit">Save and post</button>
     </form> 
 
 {% endblock content %}

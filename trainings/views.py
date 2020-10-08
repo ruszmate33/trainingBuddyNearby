@@ -65,7 +65,7 @@ def add(request):
     return render(request, "trainings/add.html", context)
 
 
-def index(request, timePeriod="month"):
+def index(request, timePeriod="month", sportFilter=None):
     if request.method == "POST":
         timePeriod = request.POST['timePeriod']
         print(f"timePeriod: {timePeriod}")

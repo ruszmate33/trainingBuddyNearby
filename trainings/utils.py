@@ -13,7 +13,7 @@ def filterPastDates(obj, timePeriod):
     elif timePeriod == "week":
         latest = startdate + oneWeek
     else:
-        latest = startdate + oneWeek
+        latest = datetime.max
     print(f"start: {startdate}")
     print(f"end: {startdate}")
     return obj.filter(date__range=[startdate, latest])
