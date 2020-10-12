@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 import folium
 import geocoder
-from .forms import TrainingForm
+from .forms import TrainingForm, TrainingFilterForm
 from .models import Training, Athlete
 from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport
 
@@ -94,7 +94,7 @@ def add(request):
 
 
 @login_required(login_url="users:login")
-def index(request, timePeriod="month", sportFilter=None):
+def index(request, timePeriod="week", sportFilter=None):
     if request.method == "POST":
         timePeriod = request.POST.get('timePeriod', None)
         print(f"timePeriod: {timePeriod}")
@@ -137,10 +137,15 @@ def index(request, timePeriod="month", sportFilter=None):
     distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
     print(distanceSet)
 
+    # form to filter results
+    trainingFilterForm = TrainingFilterForm()
+
+
     return render(request, "trainings/index.html", {
         "myLocation": nameSettlement,
         "myLat": round(lat, 2),
         "myLng": round(lng, 2),   
         "map": mapFolium,
         "distanceSet": distanceSet,
+        "trainingFilterForm": trainingFilterForm,
     })

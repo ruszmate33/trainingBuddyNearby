@@ -15,38 +15,36 @@
     {{ map|safe }}
 
 
-    <form action="{% url 'trainings:index' %}" method="POST">
+    <form action="{% url 'trainings:index' %}" method="POST" class="bootstrap4">
         {% csrf_token %}
-            <button type="submit" name="timePeriod" value="week">This week</button>
-            <button type="submit" name="timePeriod" value="month">This month</button>
-            <button type="submit" name="timePeriod" value="noLimit">All upcoming</button>       
-    </form>
-    <form action="{% url 'trainings:index' %}" method="POST">
-        {% csrf_token %}
-        <label for="sportFilter">Filter for sport:</label><br>
-        <input type="text" id="sportFilter" name="sportFilter" value="sport"><br><br>
-        <input type="submit" value="Submit">
+            {{ trainingFilterForm.as_p  }}
+            <button type="submit">Filter</button>
     </form>
     <br>
-    <table class=table>
-        <tr>
-            <th>Sport</th>
-            <th>Location</th>
-            <th>Time</th>
-            <th>Distance</th>
-        </tr>
-        {% for training in distanceSet %}
-        <tr>
-            <td>
-                <a href="{% url 'trainings:training' training.id %}">
-                    {{ training.sport }}
-                </a>
-            </td>
-            <td>{{ training.adress }}</td>
-            <td>{{ training.date }}</td>
-            <td>{{ training.distance.km|floatformat }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
+    {% if distanceSet %}
+        <table class=table>
+            <tr>
+                <th>Sport</th>
+                <th>Location</th>
+                <th>Time</th>
+                <th>Distance</th>
+            </tr>
+            {% for training in distanceSet %}
+            <tr>
+                <td>
+                    <a href="{% url 'trainings:training' training.id %}">
+                        {{ training.sport }}
+                    </a>
+                </td>
+                <td>{{ training.adress }}</td>
+                <td>{{ training.date }}</td>
+                <td>{{ training.distance.km|floatformat }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+    <div>
+        No results
+    </div>
+    {% endif %}
 {% endblock content %}

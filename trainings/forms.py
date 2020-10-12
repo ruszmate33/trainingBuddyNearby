@@ -1,6 +1,19 @@
 from django import forms
 from .models import Training
 
+class TrainingFilterForm(forms.Form):
+    timeChoices = [("week","this week"), ("month", "this month"), ("noLimit","all upcoming")]
+    timePeriod = forms.CharField(
+                    widget=forms.Select(  
+                    choices=timeChoices,
+                    ))
+    sportFilter = forms.CharField(label='sport',
+                                    required=False,
+                                    widget=forms.TextInput(
+                                    attrs={"placeholder":"sport",
+                                            }))
+
+
 # add a the datepicker https://www.youtube.com/watch?v=I2-JYxnSiB0
 class DateTimeInput(forms.DateTimeInput):
     input_type = 'datetime'
