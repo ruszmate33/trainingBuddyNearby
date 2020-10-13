@@ -25,16 +25,14 @@
             {% endfor %}
         </ul>
     </div>
-    <div>
-        <form action="{% url 'trainings:join' training.id %}" method = post>
-            {% csrf_token %}
-            <input type="submit" value=Join>
-        </form>
-    </div>
-    <div>
-        <form action="{% url 'trainings:signout' training.id %}" method = post>
-            {% csrf_token %}
-            <input type="submit" value=Signout>
-        </form>
+    <div>    
+            <form action="{% url 'trainings:toggleJoined' training.id %}" method = post>
+                {% csrf_token %}
+                {% if isRegistered %}
+                    <input type="submit" value=Signout>  
+                {% else %}
+                    <input type="submit" value=Register>
+                {% endif %}
+            </form>
     </div>
 {% endblock content %}

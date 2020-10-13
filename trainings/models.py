@@ -50,6 +50,7 @@ class Athlete(models.Model):
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
     trainings = models.ManyToManyField(Training, blank=True, related_name="participants")
 
+
     def __str__(self):
         full_name = self.user.first_name + " " + self.user.last_name
         return f"{full_name}"

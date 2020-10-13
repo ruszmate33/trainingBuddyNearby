@@ -5,8 +5,6 @@ from django.contrib.gis.db.models.functions import Distance
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-import folium
-import geocoder
 from .forms import TrainingForm, TrainingFilterForm
 from .models import Training, Athlete
 from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport, createMapWithUserLocationMark, createUserLocationPoint
@@ -38,26 +36,18 @@ def myTrainings(request):
     })
 
 
-
 @login_required(login_url="users:login")
-def join(request, training_id):
+def toggleJoined(request, training_id):
     if request.method == "POST":
         training = Training.objects.get(id=training_id)
         # add current user as participant
         athlete = Athlete.objects.get(user=request.user)
-        athlete.trainings.add(training)
 
-        # redirect to the training page
-        return HttpResponseRedirect(reverse("trainings:training", args=(training.id,)))
-
-
-@login_required(login_url="users:login")
-def signout(request, training_id):
-    if request.method == "POST":
-        training = Training.objects.get(id=training_id)
-        # add current user as participant
-        athlete = Athlete.objects.get(user=request.user)
-        athlete.trainings.remove(training)
+        myTrainings = athlete.trainings.all()
+        if training in myTrainings:
+            athlete.trainings.remove(training)
+        else:
+            athlete.trainings.add(training)
 
         # redirect to the training page
         return HttpResponseRedirect(reverse("trainings:training", args=(training.id,)))
@@ -65,12 +55,17 @@ def signout(request, training_id):
 
 @login_required(login_url="users:login")
 def training(request, training_id):
-    training = Training.objects.get(id=training_id)
+    training = Training.objects.get(id=training_id)    
     sport = training.getSport()
     description = training.getDescription()
     adress = training.getAdress()
     date = training.getDate()
     participants = training.participants.all()
+    athlete = Athlete.objects.get(user=request.user)
+    if training.participants.filter(id=athlete.id).exists(): # improve this with get-er
+        isRegistered = True
+    else:
+        isRegistered = False
     context = {
         "training":training,
         "sport": sport,
@@ -78,6 +73,7 @@ def training(request, training_id):
         "adress": adress,
         "date": date,
         "participants":participants,
+        "isRegistered":isRegistered,
         }
 
     return render(request, "trainings/training.html", context)
