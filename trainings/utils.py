@@ -2,6 +2,35 @@ from datetime import datetime, timedelta
 import folium 
 import geocoder
 from geopy.distance import geodesic
+from django.contrib.gis.geos import Point
+
+
+def createUserLocationPoint():
+    # marker for user location
+    try:
+        user_location = geocoder.osm("Wien")
+    except:
+        print(f"geocoder open street map can not process location {user_location}")
+    try:
+        lat, lng = getLatLngFromApi(user_location)
+    except:
+        print(f"lat, lng gets: {getLatLngFromApi(user_location)}")
+        # hard code 0, 0 as emergency
+        lat, lng = 0, 0
+    try:
+        nameSettlement = getSettlementFromApi(user_location)
+        user_location_point = Point(lng, lat, srid=4326)
+    except:
+        user_location_point = Point(0, 0, srid=4326)
+    return user_location_point
+
+
+def createMapWithUserLocationMark(user_location_point):
+    # initialize folium map
+    mapFolium = folium.Map(width=800, height=500, location=(user_location_point.y, user_location_point.x))
+    addMarker(user_location_point.y, user_location_point.x, "my location", mapFolium, 0)
+    return mapFolium
+
 
 # filter for trainings
 def filterBySport(obj, sportFilter):

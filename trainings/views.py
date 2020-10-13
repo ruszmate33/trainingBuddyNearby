@@ -1,3 +1,4 @@
+from os import name
 from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
@@ -8,7 +9,23 @@ import folium
 import geocoder
 from .forms import TrainingForm, TrainingFilterForm
 from .models import Training, Athlete
-from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport
+from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport, createMapWithUserLocationMark, createUserLocationPoint
+
+
+locationString = "Vienna"
+
+@login_required(login_url="users:login")
+def myTrainings(request):
+    # get all user trainings
+    athlete = Athlete.objects.get(user=request.user)
+    myTrainings = athlete.trainings.all()
+    distanceSet = myTrainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
+
+    return render(request, "trainings/myTrainings.html", {
+        "myTrainings":myTrainings,
+    })
+
+
 
 @login_required(login_url="users:login")
 def join(request, training_id):
@@ -102,27 +119,10 @@ def index(request, timePeriod="week", sportFilter=None):
         print(f"sportFilter: {sportFilter}")
         print(f"whole postRequest: {request.POST}")
     
-    # marker for user location
-    print(f"timePeriod: {timePeriod}")
-    try:
-        user_location = geocoder.osm("Wien")
-    except:
-        print(f"geocoder open street map can not process location {user_location}")
-    try:
-        lat, lng = getLatLngFromApi(user_location)
-    except:
-        print(f"lat, lng gets: {getLatLngFromApi(user_location)}")
-        # hard code 0, 0 as emergency
-        lat, lng = 0, 0
-    try:
-        nameSettlement = getSettlementFromApi(user_location)
-        user_location_point = Point(lng, lat, srid=4326)
-    except:
-        user_location_point = Point(0, 0, srid=4326)
 
-    # initialize folium map
-    mapFolium = folium.Map(width=800, height=500, location=(lat, lng))
-    addMarker(lat, lng, "my location", mapFolium, 0)
+    user_location_point = createUserLocationPoint()
+    nameSettlement = getSettlementFromApi(locationString)
+    mapFolium = createMapWithUserLocationMark(user_location_point)
 
     # filter out trainings by time and sport
     trainings = Training.objects.all()
@@ -140,11 +140,11 @@ def index(request, timePeriod="week", sportFilter=None):
     # form to filter results
     trainingFilterForm = TrainingFilterForm()
 
+    print(f"name of settlement: {nameSettlement}")
+
 
     return render(request, "trainings/index.html", {
         "myLocation": nameSettlement,
-        "myLat": round(lat, 2),
-        "myLng": round(lng, 2),   
         "map": mapFolium,
         "distanceSet": distanceSet,
         "trainingFilterForm": trainingFilterForm,
