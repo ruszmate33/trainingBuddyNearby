@@ -19,10 +19,22 @@ def myTrainings(request):
     # get all user trainings
     athlete = Athlete.objects.get(user=request.user)
     myTrainings = athlete.trainings.all()
+    myTrainings = filterPastDates(myTrainings, "all")
+
+    user_location_point = createUserLocationPoint(locationString)
+    mapFolium = createMapWithUserLocationMark(user_location_point)
+
+
+    #add marker to locations
+    [training.putOnMap(mapFolium) for training in myTrainings]
+    mapFolium = mapFolium._repr_html_()
+    
+    # order by distance to user
     distanceSet = myTrainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
 
     return render(request, "trainings/myTrainings.html", {
-        "myTrainings":myTrainings,
+        "distanceSet":distanceSet,
+        "map":mapFolium,
     })
 
 
@@ -120,7 +132,7 @@ def index(request, timePeriod="week", sportFilter=None):
         print(f"whole postRequest: {request.POST}")
     
 
-    user_location_point = createUserLocationPoint()
+    user_location_point = createUserLocationPoint(locationString)
     nameSettlement = getSettlementFromApi(locationString)
     mapFolium = createMapWithUserLocationMark(user_location_point)
 

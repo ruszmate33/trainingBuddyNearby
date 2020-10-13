@@ -5,10 +5,10 @@ from geopy.distance import geodesic
 from django.contrib.gis.geos import Point
 
 
-def createUserLocationPoint():
+def createUserLocationPoint(locationString):
     # marker for user location
     try:
-        user_location = geocoder.osm("Wien")
+        user_location = geocoder.osm(locationString)
     except:
         print(f"geocoder open street map can not process location {user_location}")
     try:
