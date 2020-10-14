@@ -13,6 +13,7 @@ class Training(models.Model):
     location = models.PointField(geography=True, default = Point(0, 0))
     date = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     description = models.CharField(max_length=100, blank=False)
+    maxParticipants = models.PositiveSmallIntegerField(blank=True, default=100)
 
     def getParticipants(self):
         return self.participants.all()

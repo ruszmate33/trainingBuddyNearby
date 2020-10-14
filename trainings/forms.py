@@ -27,6 +27,7 @@ class TrainingForm(forms.ModelForm):
         fields = ['sport', 
                   'adress', 
                   'date',
+                  'maxParticipants',
                   'description']
         widgets = {
             'sport': forms.TextInput(attrs={"placeholder":"your sport"}),

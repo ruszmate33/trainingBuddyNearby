@@ -19,9 +19,12 @@
                 Description: {{ description }}
             </li>
             {% for participant in participants %}
+                <li>
+                    {{ participants.count }}/{{ training.maxParticipants}} spots available
+                </li>
                 <li>{{ participant }} {{ participant.last_name }}</li>
                 {% empty %}
-                <li>No participants yet.</li>
+                <li>0/{{ training.maxParticipants}}</li>
             {% endfor %}
         </ul>
     </div>

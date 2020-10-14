@@ -25,6 +25,7 @@
                 <th>Sport</th>
                 <th>Location</th>
                 <th>Time</th>
+                <th>Spots available</th>
                 <th>Distance</th>
             </tr>
             {% for training in distanceSet %}
@@ -36,7 +37,14 @@
                 </td>
                 <td>{{ training.adress }}</td>
                 <td>{{ training.date }}</td>
-                <td>{{ training.distance.km|floatformat }}</td>
+                    {% if training.participants == None %}
+                        <td>0/{{ training.maxParticipants}}</td>
+                    {% elif training.participants == training.maxParticipants %}
+                        <td>Fully booked</td>
+                    {% else %}
+                        <td>{{ training.participants }}/{{ training.maxParticipants}}</td>
+                    {% endif %}
+                    <td>{{ training.distance.km|floatformat }}</td>
             </tr>
             {% endfor %}
         </table>

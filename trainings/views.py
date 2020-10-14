@@ -142,7 +142,7 @@ def index(request, timePeriod="week", sportFilter=None):
     mapFolium = mapFolium._repr_html_()
     
     # order by distance to user
-    distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
+    distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').distinct()
     print(distanceSet)
 
     # form to filter results
