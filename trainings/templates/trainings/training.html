@@ -38,4 +38,10 @@
                 {% endif %}
             </form>
     </div>
+    <div>
+        <form action="{% url 'trainings:deleteTraining' training.id %}" method = post>
+            {% csrf_token %}
+                <input type="submit" value=Delete>
+        </form>
+    </div>
 {% endblock content %}

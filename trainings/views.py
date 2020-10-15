@@ -13,6 +13,13 @@ from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPast
 locationString = "Vienna"
 
 @login_required(login_url="users:login")
+def deleteTraining(request, training_id):
+    if request.method == 'POST':
+        training = Training.objects.get(id=training_id)
+        training.delete()
+        return HttpResponseRedirect(reverse("trainings:myTrainings"))
+
+@login_required(login_url="users:login")
 def myTrainings(request):
     # get all user trainings
     athlete = Athlete.objects.get(user=request.user)
