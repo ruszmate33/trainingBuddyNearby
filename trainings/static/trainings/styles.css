@@ -1,0 +1,18 @@
+table {
+    margin-top: 25px;
+}
+
+h2 {
+    margin-top: 25px;
+    margin-bottom: auto;
+}
+
+#map {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#filterForm {
+    margin-top: auto;
+    margin-bottom: auto;
+}

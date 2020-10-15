@@ -27,7 +27,7 @@ def createUserLocationPoint(locationString):
 
 def createMapWithUserLocationMark(user_location_point):
     # initialize folium map
-    mapFolium = folium.Map(width=800, height=500, location=(user_location_point.y, user_location_point.x))
+    mapFolium = folium.Map(width='100%', height='100%', left='0%', top='0%', location=(user_location_point.y, user_location_point.x))
     addMarker(user_location_point.y, user_location_point.x, "my location", mapFolium, 0)
     return mapFolium
 

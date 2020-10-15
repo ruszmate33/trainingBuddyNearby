@@ -9,16 +9,17 @@
     <h2>
         Training sessions
     </h2>
-    <br>
-    {{ map|safe }}
+    <div id="map">
+        {{ map|safe }}
+    </div>
 
-
+    <div id="filterForm">
     <form action="{% url 'trainings:index' %}" method="POST" class="bootstrap4">
         {% csrf_token %}
             {{ trainingFilterForm.as_p  }}
             <button type="submit">Filter</button>
     </form>
-    <br>
+    </div>
     {% if distanceSet %}
         <table class=table>
             <tr>

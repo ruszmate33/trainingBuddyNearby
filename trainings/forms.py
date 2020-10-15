@@ -32,6 +32,9 @@ class TrainingForm(forms.ModelForm):
         widgets = {
             'sport': forms.TextInput(attrs={"placeholder":"your sport"}),
             'adress': forms.TextInput(attrs={"placeholder":"City/Town, Street"}),
+            'maxParticipants': forms.TextInput(attrs={
+                                        'label': 'total participants',
+                                        "placeholder":"maximum number of participants"}),
             'description': forms.Textarea(
                                 attrs={
                                     "placeholder":"Tell others what to expect!",
