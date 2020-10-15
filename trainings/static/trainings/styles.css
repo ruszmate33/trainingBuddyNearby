@@ -4,7 +4,7 @@ table {
 
 h2 {
     margin-top: 25px;
-    margin-bottom: auto;
+    margin-bottom: 25px;
 }
 
 #map {
@@ -15,4 +15,8 @@ h2 {
 #filterForm {
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.list-group {
+    margin-top: 25px;
 }

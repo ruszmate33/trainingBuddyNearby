@@ -62,13 +62,22 @@ def toggleJoined(request, training_id):
 
 @login_required(login_url="users:login")
 def training(request, training_id):
-    training = Training.objects.get(id=training_id)    
+    training = Training.objects.get(id=training_id)
+    print(f"training: {training} ") 
+     
     sport = training.getSport()
     description = training.getDescription()
     adress = training.getAdress()
     date = training.getDate()
     participants = training.participants.all()
+    
     athlete = Athlete.objects.get(user=request.user)
+    print(f"organizedTrainings: {athlete.getOrganizedTrainings()}")
+    if training in athlete.getOrganizedTrainings():
+        isOrganizer = True
+    else:
+        isOrganizer = False
+
     if training.participants.filter(id=athlete.id).exists(): # improve this with get-er
         isRegistered = True
     else:
@@ -79,9 +88,12 @@ def training(request, training_id):
         "description": description,
         "adress": adress,
         "date": date,
-        "participants":participants,
+        "participants": participants,
+        "isOrganizer": isOrganizer,
         "isRegistered":isRegistered,
         }
+
+    print(context)
 
     return render(request, "trainings/training.html", context)
 
@@ -101,7 +113,11 @@ def add(request):
                 instance.adress = getSettlementFromApi(myLocation)
                 lat, lng = getLatLngFromApi(myLocation)
                 instance.location = Point(lng, lat) # Point takes this way
+                athlete = Athlete.objects.get(user=request.user)
                 instance.save()
+                # register as organizer and as 1st participant
+                athlete.organizedTrainings.add(instance)
+                instance.participants.add(athlete)
                 
             except:
                 print(f"Sorry, we could not find location {myLocation}.")

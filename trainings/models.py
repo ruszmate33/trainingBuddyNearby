@@ -15,6 +15,9 @@ class Training(models.Model):
     description = models.CharField(max_length=100, blank=False)
     maxParticipants = models.PositiveSmallIntegerField(blank=True, default=10)
 
+    def getOrganizer(self):
+        return self.organizer
+    
     def getParticipants(self):
         return self.participants.all()
     
@@ -50,6 +53,13 @@ class Training(models.Model):
 class Athlete(models.Model):
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
     trainings = models.ManyToManyField(Training, blank=True, related_name="participants")
+    organizedTrainings = models.ManyToManyField(Training, blank=True, related_name="organizer")
+
+    def getID(self):
+        return self.id
+
+    def getOrganizedTrainings(self):
+        return self.organizedTrainings.all()
 
 
     def __str__(self):
