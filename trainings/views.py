@@ -8,6 +8,7 @@ from django.urls import reverse
 from .forms import TrainingForm, TrainingFilterForm
 from .models import Training, Athlete
 from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport, createMapWithUserLocationMark, createUserLocationPoint
+from .filters import TrainingFilter
 
 
 locationString = "Vienna"
@@ -165,8 +166,10 @@ def index(request, timePeriod="week", sportFilter=None):
 
     # filter out trainings by time and sport
     trainings = Training.objects.all()
-    trainings = filterPastDates(trainings, timePeriod)
-    trainings = filterBySport(trainings, sportFilter)
+    # trainings = filterPastDates(trainings, timePeriod)
+    # trainings = filterBySport(trainings, sportFilter)
+    trainingFilter = TrainingFilter(request.GET, queryset=trainings)
+    trainings = trainingFilter.qs
     
     #add marker to locations
     [training.putOnMap(mapFolium) for training in trainings]
@@ -178,7 +181,10 @@ def index(request, timePeriod="week", sportFilter=None):
     print(f"distance set for template:{len(distanceSet)} length, {distanceSet}")
 
     # form to filter results
-    trainingFilterForm = TrainingFilterForm()
+    # trainingFilterForm = TrainingFilterForm()
+    
+
+
 
     print(f"name of settlement: {nameSettlement}")
 
@@ -187,5 +193,5 @@ def index(request, timePeriod="week", sportFilter=None):
         "myLocation": nameSettlement,
         "map": mapFolium,
         "distanceSet": distanceSet,
-        "trainingFilterForm": trainingFilterForm,
+        "trainingFilter": trainingFilter,
     })
