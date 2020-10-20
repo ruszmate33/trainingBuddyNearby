@@ -15,6 +15,9 @@ class Training(models.Model):
     description = models.CharField(max_length=100, blank=False)
     maxParticipants = models.PositiveSmallIntegerField(blank=True, default=10)
 
+    def isRegistered(self, athlete):
+        return self.participants.filter(id=athlete.id).exists()
+
     def getOrganizer(self):
         return self.organizer
     

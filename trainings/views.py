@@ -78,10 +78,17 @@ def training(request, training_id):
     else:
         isOrganizer = False
 
-    if training.participants.filter(id=athlete.id).exists(): # improve this with get-er
-        isRegistered = True
-    else:
-        isRegistered = False
+    isRegistered = training.isRegistered(athlete)
+    
+    # create a map for this single training as well
+    try:
+        trainingLng = training.getLng()
+        trainingLat = training.getLat()
+        mapFolium = createMapWithUserLocationMark(Point(trainingLng, trainingLat, srid=4326))
+        mapFolium = mapFolium._repr_html_()
+    except:
+        print("sorry could not map location")
+
     context = {
         "training":training,
         "sport": sport,
@@ -91,9 +98,9 @@ def training(request, training_id):
         "participants": participants,
         "isOrganizer": isOrganizer,
         "isRegistered":isRegistered,
+        "map":mapFolium,
         }
-
-    print(context)
+    
 
     return render(request, "trainings/training.html", context)
 
@@ -117,7 +124,8 @@ def add(request):
                 instance.save()
                 # register as organizer and as 1st participant
                 athlete.organizedTrainings.add(instance)
-                instance.participants.add(athlete)
+                #instance.participants.add(athlete)
+                         
                 
             except:
                 print(f"Sorry, we could not find location {myLocation}.")
@@ -166,7 +174,8 @@ def index(request, timePeriod="week", sportFilter=None):
     
     # order by distance to user
     distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').distinct()
-    print(distanceSet)
+    #distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').unique()
+    print(f"distance set for template:{len(distanceSet)} length, {distanceSet}")
 
     # form to filter results
     trainingFilterForm = TrainingFilterForm()

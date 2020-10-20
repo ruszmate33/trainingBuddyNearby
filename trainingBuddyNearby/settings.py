@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'trainingBuddyNearby.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'trainings_postgis_db',
+        'NAME': 'trainings2_postgis_db',
         'USER': 'postgres',
         'PASSWORD': '12345',
         'HOST': 'localhost',

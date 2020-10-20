@@ -19,4 +19,10 @@ h2 {
 
 .list-group {
     margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.button {
+    margin-top: 25 px;
+    margin-bottom: 25px;
 }

@@ -23,8 +23,11 @@
             </li>
         </ul>
     </div>
+    <div id="map">
+        {{ map|safe }}
+    </div>
             <div>
-                <h2>Registered</h2>
+                <h2>Participants</h2>
             <ul class="list-group">
             {% for participant in participants %}
                 <li class="list-group-item">{{ participant }} {{ participant.last_name }}</li>
@@ -34,18 +37,18 @@
             </ul>
     </div>
     
-    <div>    
+    <div class="button">    
             <form action="{% url 'trainings:toggleJoined' training.id %}" method = post>
                 {% csrf_token %}
                 {% if isRegistered %}
-                    <input type="submit" value=Signout>  
+                    <input type="submit" value="Signout from activity">  
                 {% else %}
                     <input type="submit" value=Register>
                 {% endif %}
             </form>
     </div>
     {% if isOrganizer %}
-        <div>
+        <div class="button">
             <form action="{% url 'trainings:deleteTraining' training.id %}" method = post>
                 {% csrf_token %}
                     <input type="submit" value=Delete>
