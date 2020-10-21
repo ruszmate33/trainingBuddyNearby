@@ -166,10 +166,10 @@ def index(request, timePeriod="week", sportFilter=None):
 
     # filter out trainings by time and sport
     trainings = Training.objects.all()
-    # trainings = filterPastDates(trainings, timePeriod)
-    # trainings = filterBySport(trainings, sportFilter)
-    trainingFilter = TrainingFilter(request.GET, queryset=trainings)
-    trainings = trainingFilter.qs
+    trainings = filterPastDates(trainings, timePeriod)
+    trainings = filterBySport(trainings, sportFilter)
+    # trainingFilter = TrainingFilter(request.GET, queryset=trainings)
+    # trainings = trainingFilter.qs
     
     #add marker to locations
     [training.putOnMap(mapFolium) for training in trainings]
@@ -177,21 +177,15 @@ def index(request, timePeriod="week", sportFilter=None):
     
     # order by distance to user
     distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').distinct()
-    #distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').unique()
     print(f"distance set for template:{len(distanceSet)} length, {distanceSet}")
 
     # form to filter results
-    # trainingFilterForm = TrainingFilterForm()
+    trainingFilterForm = TrainingFilterForm()
     
-
-
-
-    print(f"name of settlement: {nameSettlement}")
-
-
+    
     return render(request, "trainings/index.html", {
         "myLocation": nameSettlement,
         "map": mapFolium,
         "distanceSet": distanceSet,
-        "trainingFilter": trainingFilter,
+        "trainingFilter": trainingFilterForm,
     })

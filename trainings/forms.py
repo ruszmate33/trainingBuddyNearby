@@ -1,5 +1,7 @@
 from django import forms
 from .models import Training
+from bootstrap_datepicker_plus import DateTimePickerInput
+
 
 class TrainingFilterForm(forms.Form):
     timeChoices = [("week","this week"), ("month", "this month"), ("noLimit","all upcoming")]
@@ -10,8 +12,8 @@ class TrainingFilterForm(forms.Form):
     sportFilter = forms.CharField(label='sport',
                                     required=False,
                                     widget=forms.TextInput(
-                                    attrs={"placeholder":"sport",
-                                            }))
+                                    attrs={"placeholder":"e.g. hiking",}
+                                    ))
 
 
 # add a the datepicker https://www.youtube.com/watch?v=I2-JYxnSiB0
@@ -40,5 +42,5 @@ class TrainingForm(forms.ModelForm):
                                     "placeholder":"Tell others what to expect!",
                                     "cols":90,
                                     "rows":10}),
-            'date': forms.DateTimeInput(attrs={'type':'datetime-local'})
-        }
+            # 'date': forms.DateTimeInput(attrs={'type':'datetime-local'})
+            'date': DateTimePickerInput(format="%Y-%m-%d %H:%M")}

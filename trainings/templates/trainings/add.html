@@ -19,7 +19,7 @@
 
     <form action="{% url 'trainings:add' %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button type="submit">Save and post</button>
     </form> 
 

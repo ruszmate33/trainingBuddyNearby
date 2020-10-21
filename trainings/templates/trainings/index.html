@@ -14,8 +14,9 @@
     </div>
 
     <div id="filterForm">
-    <form method="get" class="bootstrap4">
-            {{ trainingFilter.form  }}
+    <form action="{% url 'trainings:index' %}" method="post" class="bootstrap4">
+            {% csrf_token %}
+            {{ trainingFilter }}
             <button type="submit">Filter</button>
     </form>
     </div>
