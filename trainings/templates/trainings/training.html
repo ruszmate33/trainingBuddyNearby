@@ -37,16 +37,18 @@
             </ul>
     </div>
     
-    <div class="button">    
-            <form action="{% url 'trainings:toggleJoined' training.id %}" method = post>
-                {% csrf_token %}
-                {% if isRegistered %}
-                    <input type="submit" value="Signout from activity">  
-                {% else %}
-                    <input type="submit" value=Register>
-                {% endif %}
-            </form>
-    </div>
+    {% if not participants.count == training.maxParticipants %}
+        <div class="button">    
+                <form action="{% url 'trainings:toggleJoined' training.id %}" method = post>
+                    {% csrf_token %}
+                    {% if isRegistered %}
+                        <input type="submit" value="Signout from activity">  
+                    {% else %}
+                        <input type="submit" value=Register>
+                    {% endif %}
+                </form>
+        </div>
+    {% endif %}
     {% if isOrganizer %}
         <div class="button">
             <form action="{% url 'trainings:deleteTraining' training.id %}" method = post>
