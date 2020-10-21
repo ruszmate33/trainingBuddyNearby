@@ -32,7 +32,7 @@
             {% for participant in participants %}
                 <li class="list-group-item">{{ participant }} {{ participant.last_name }}</li>
                 {% empty %}
-                <li class="list-group-item">0/{{ training.maxParticipants}}</li>
+                <li class="list-group-item">No participant yet.</li>
             {% endfor %}
             </ul>
     </div>
