@@ -34,7 +34,7 @@ def myTrainings(request):
     mapFolium = mapFolium._repr_html_()
     
     # order by distance to user
-    distanceSet = myTrainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance').distinct()
+    distanceSet = myTrainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','distance')
 
     return render(request, "trainings/myTrainings.html", {
         "distanceSet":distanceSet,
@@ -46,14 +46,27 @@ def myTrainings(request):
 def toggleJoined(request, training_id):
     if request.method == "POST":
         training = Training.objects.get(id=training_id)
+
+        
+        print(f"training before: {training.participants}")
+
         # add current user as participant
         athlete = Athlete.objects.get(user=request.user)
+        print(f"athlete before: {athlete}")
 
         myTrainings = athlete.trainings.all()
+        # if training in myTrainings:
+        #     athlete.trainings.remove(training)
+        # else:
+        #     athlete.trainings.add(training)
+
         if training in myTrainings:
-            athlete.trainings.remove(training)
+            training.participants.remove(athlete)
         else:
-            athlete.trainings.add(training)
+            training.participants.add(athlete)
+
+        print(f"training after: {training.participants}")
+        print(f"athlete after: {athlete}")
 
         # redirect to the training page
         return HttpResponseRedirect(reverse("trainings:training", args=(training.id,)))
@@ -164,10 +177,13 @@ def index(request, timePeriod="week", sportFilter=None):
     mapFolium = mapFolium._repr_html_()
     
     # order by distance to user
-    distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').distinct()
+    distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance')
+    
 
     # form to filter results
     trainingFilterForm = TrainingFilterForm()   
+
+    print(f"distanceSet: {distanceSet}")
     
     return render(request, "trainings/index.html", {
         "myLocation": nameSettlement,

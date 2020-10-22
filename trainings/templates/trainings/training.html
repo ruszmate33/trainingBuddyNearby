@@ -19,7 +19,11 @@
                 Description: {{ description }}
             </li>
             <li class="list-group-item">
+                {% if not participants.count == training.maxParticipants %}
                 {{ participants.count }}/{{ training.maxParticipants}} spots available
+                {% else %}
+                Fully booked
+                {% endif %}
             </li>
         </ul>
     </div>

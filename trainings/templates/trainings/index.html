@@ -7,7 +7,7 @@
 
 {% block content %}
     <h2>
-        Training sessions
+        Training buddy | 
     </h2>
     <div id="map">
         {{ map|safe }}
@@ -26,7 +26,7 @@
                 <th>Sport</th>
                 <th>Location</th>
                 <th>Time</th>
-                <th>Distance</th>
+                <th>Distance [km]</th>
                 <th>Spots available</th>
             </tr>
             {% for training in distanceSet %}
@@ -44,7 +44,7 @@
                 {% elif training.participants == training.maxParticipants %}
                     <td>Fully booked</td>
                 {% else %}
-                    <td>{{ training.participants }}/{{ training.maxParticipants}}</td>
+                    <td>{{ training.participants.count }}/{{ training.maxParticipants}}</td>
                 {% endif %}
             </tr>
             {% endfor %}
