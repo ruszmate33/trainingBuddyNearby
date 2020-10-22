@@ -1,21 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django import forms
-from trainings.models import Athlete
-from django.contrib.auth.models import User
-
-
-class SignupForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=True, help_text='Required.')
-    last_name = forms.CharField(max_length=30, required=True, help_text='Required.')
-    email = forms.EmailField(max_length=30, required=True, help_text='Required.')
-
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+from .forms import LoginForm, SignupForm
 
 
 # Create your views here.
@@ -43,17 +30,23 @@ def login_view(request):
             return HttpResponseRedirect(reverse("trainings:index"))
         # Otherwise, return login page again with new context
         else:
+            loginForm = LoginForm()
             return render(request, "users/login.html", {
-                "message": "Invalid Credentials"
+                "message": "Invalid Credentials",
+                "loginForm":loginForm
             })
-    return render(request, "users/login.html")
+    else:
+        loginForm = LoginForm()
+    return render(request, "users/login.html", {"loginForm":loginForm})
 
 
 def logout_view(request):
     request.session["first_name"] = []
     logout(request)
+    loginForm = LoginForm()
     return render(request, "users/login.html", {
-                "message": "Logged Out"
+                "message": "Logged Out",
+                "loginForm":loginForm
             })
 
 
