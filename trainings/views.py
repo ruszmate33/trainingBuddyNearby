@@ -1,4 +1,3 @@
-from os import name
 from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
@@ -7,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import TrainingForm, TrainingFilterForm
 from .models import Training, Athlete
-from .utils import addMarker, getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport, createMapWithUserLocationMark, createUserLocationPoint
+from .utils import getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport, createMapWithUserLocationMark, createUserLocationPoint
 
 
 locationString = "Vienna"
@@ -63,7 +62,6 @@ def toggleJoined(request, training_id):
 @login_required(login_url="users:login")
 def training(request, training_id):
     training = Training.objects.get(id=training_id)
-    print(f"training: {training} ") 
      
     sport = training.getSport()
     description = training.getDescription()
@@ -72,7 +70,7 @@ def training(request, training_id):
     participants = training.participants.all()
     
     athlete = Athlete.objects.get(user=request.user)
-    print(f"organizedTrainings: {athlete.getOrganizedTrainings()}")
+
     if training in athlete.getOrganizedTrainings():
         isOrganizer = True
     else:
@@ -124,11 +122,9 @@ def add(request):
                 instance.save()
                 # register as organizer and as 1st participant
                 athlete.organizedTrainings.add(instance)
-                #instance.participants.add(athlete)
                          
                 
             except:
-                print(f"Sorry, we could not find location {myLocation}.")
                 errormessage = f"Sorry, we could not find location {myLocation}."
                 return render(request, "trainings/add.html", {
                         "form": form,
@@ -139,7 +135,6 @@ def add(request):
     else:
         form = TrainingForm()
         errormassage = None
-        # user_location = geocoder.osm("Wien")
 
     context = {
         "form": form,
@@ -152,13 +147,9 @@ def add(request):
 @login_required(login_url="users:login")
 def index(request, timePeriod="week", sportFilter=None):
     if request.method == "POST":
-        timePeriod = request.POST.get('timePeriod', None)
-        print(f"timePeriod: {timePeriod}")
-        sportFilter = request.POST.get('sportFilter', None)
-        print(f"sportFilter: {sportFilter}")
-        print(f"whole postRequest: {request.POST}")
+        timePeriod = request.POST.get('timePeriod', None)    
+        sportFilter = request.POST.get('sportFilter', None)   
     
-
     user_location_point = createUserLocationPoint(locationString)
     nameSettlement = getSettlementFromApi(locationString)
     mapFolium = createMapWithUserLocationMark(user_location_point)
@@ -174,7 +165,6 @@ def index(request, timePeriod="week", sportFilter=None):
     
     # order by distance to user
     distanceSet = trainings.annotate(distance=Distance('location', user_location_point)).order_by('distance').values('id','adress','sport','date','participants', 'maxParticipants', 'distance').distinct()
-    print(f"distance set for template:{len(distanceSet)} length, {distanceSet}")
 
     # form to filter results
     trainingFilterForm = TrainingFilterForm()   

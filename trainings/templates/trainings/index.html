@@ -41,9 +41,11 @@
                 <td>{{ training.distance.km|floatformat }}</td>
                 {% if training.participants == None %}
                     <td>0/{{ training.maxParticipants}}</td>
+                {% elif training.participants == training.maxParticipants %}
+                    <td>Fully booked</td>
                 {% else %}
                     <td>{{ training.participants }}/{{ training.maxParticipants}}</td>
-                {% endif %}       
+                {% endif %}
             </tr>
             {% endfor %}
         </table>

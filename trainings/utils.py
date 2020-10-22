@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 import folium 
 import geocoder
-from geopy.distance import geodesic
 from django.contrib.gis.geos import Point
 
 
