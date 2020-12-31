@@ -41,7 +41,7 @@ class Training(models.Model):
         return '<a href=http://127.0.0.1:8000/trainings/'+str(self.getID())+' target="_blank">Join</a>'
 
     def putOnMap(self, mapFolium):
-        addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium, self.getUrl(), self.getDate())
+        addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium, self.getUrl(), self.getDate(), color="blue")
 
     def getDescription(self):
         return self.description

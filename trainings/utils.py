@@ -24,9 +24,9 @@ def createUserLocationPoint(locationString):
     return user_location_point
 
 
-def createMapWithUserLocationMark(user_location_point):
+def createMapWithUserLocationMark(user_location_point, zoom=10):
     # initialize folium map
-    mapFolium = folium.Map(width='100%', height='100%', left='0%', top='0%', location=(user_location_point.y, user_location_point.x))
+    mapFolium = folium.Map(width='100%', height='100%', left='0%', top='0%', min_zoom=zoom, location=(user_location_point.y, user_location_point.x))
     addMarker(user_location_point.y, user_location_point.x, "my location", mapFolium, 0)
     return mapFolium
 
@@ -51,7 +51,7 @@ def filterPastDates(obj, timePeriod):
     print(f"end: {startdate}")
     return obj.filter(date__range=[startdate, latest])
 
-def addMarker(lat, lng, name, mapFolium, url, date=None):
+def addMarker(lat, lng, name, mapFolium, url, date=None, color='red'):
     if date is not None:
         html =  f"<h4>{name}</h4><p>{date}</p><p>{url}</p>"
         html = folium.Html(html, script=True)
@@ -60,7 +60,7 @@ def addMarker(lat, lng, name, mapFolium, url, date=None):
         popup = folium.Popup(name)
     folium.Marker([lat, lng], 
                     tooltip=name,
-                    icon=folium.Icon(color='red'), 
+                    icon=folium.Icon(color=color), 
                     popup=popup).add_to(mapFolium)
 
 

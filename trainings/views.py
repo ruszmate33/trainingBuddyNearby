@@ -9,7 +9,7 @@ from .models import Training, Athlete
 from .utils import getLatLngFromApi, getSettlementFromApi, filterPastDates, filterBySport, createMapWithUserLocationMark, createUserLocationPoint
 
 
-locationString = "Vienna"
+locationString = "Lorenz-Müller-Gasse 1A, 1200 Wien"
 
 @login_required(login_url="users:login")
 def deleteTraining(request, training_id):
@@ -55,18 +55,19 @@ def toggleJoined(request, training_id):
         print(f"athlete before: {athlete}")
 
         myTrainings = athlete.trainings.all()
-        # if training in myTrainings:
-        #     athlete.trainings.remove(training)
-        # else:
-        #     athlete.trainings.add(training)
-
+        
         if training in myTrainings:
             training.participants.remove(athlete)
         else:
             training.participants.add(athlete)
+    
+        # registrationChanged = True
 
-        print(f"training after: {training.participants}")
-        print(f"athlete after: {athlete}")
+        # context = {"registrationMessage":registrationMessage,
+        #             "registrationChanged":registrationChanged}
+
+        # print(f"training after: {training.participants}")
+        # print(f"athlete after: {athlete}")
 
         # redirect to the training page
         return HttpResponseRedirect(reverse("trainings:training", args=(training.id,)))
@@ -95,7 +96,7 @@ def training(request, training_id):
     try:
         trainingLng = training.getLng()
         trainingLat = training.getLat()
-        mapFolium = createMapWithUserLocationMark(Point(trainingLng, trainingLat, srid=4326))
+        mapFolium = createMapWithUserLocationMark(Point(trainingLng, trainingLat, srid=4326), zoom=14)
         mapFolium = mapFolium._repr_html_()
     except:
         print("sorry could not map location")
