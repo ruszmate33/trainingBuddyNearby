@@ -79,7 +79,7 @@ def training(request, training_id):
      
     sport = training.getSport()
     description = training.getDescription()
-    adress = training.getAdress()
+    adress = training.adress
     date = training.getDate()
     participants = training.participants.all()
     

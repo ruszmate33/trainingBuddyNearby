@@ -46,7 +46,8 @@ class Training(models.Model):
     def getDescription(self):
         return self.description
 
-    def getAdress(self):
+    @property
+    def adress(self):
         return self.adress
 
     def getDate(self):
