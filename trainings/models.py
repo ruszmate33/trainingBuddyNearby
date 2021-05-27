@@ -18,19 +18,19 @@ class Training(models.Model):
     def isRegistered(self, athlete):
         return self.participants.filter(id=athlete.id).exists()
 
-    def getOrganizer(self):
+    @property
+    def organizer(self):
         return self.organizer
-    
-    def getParticipants(self):
-        return self.participants.all()
-    
+      
     def getID(self):
         return self.id
 
-    def getLng(self):
+    @property
+    def longitude(self):
         return self.location.x
 
-    def getLat(self):
+    @property
+    def lattitude(self):
         return self.location.y
 
     def getSport(self):
@@ -41,7 +41,7 @@ class Training(models.Model):
         return '<a href=http://127.0.0.1:8000/trainings/'+str(self.getID())+' target="_blank">Join</a>'
 
     def putOnMap(self, mapFolium):
-        addMarker(self.getLat(), self.getLng(), self.getSport(), mapFolium, self.getUrl(), self.getDate(), color="blue")
+        addMarker(self.lattitude, self.longitude, self.getSport(), mapFolium, self.getUrl(), self.getDate(), color="blue")
 
     def getDescription(self):
         return self.description

@@ -94,9 +94,9 @@ def training(request, training_id):
     
     # create a map for this single training as well
     try:
-        trainingLng = training.getLng()
-        trainingLat = training.getLat()
-        mapFolium = createMapWithUserLocationMark(Point(trainingLng, trainingLat, srid=4326), zoom=14)
+        long = training.longitude
+        latt = training.lattitude
+        mapFolium = createMapWithUserLocationMark(Point(long, latt, srid=4326), zoom=14)
         mapFolium = mapFolium._repr_html_()
     except:
         print("sorry could not map location")
